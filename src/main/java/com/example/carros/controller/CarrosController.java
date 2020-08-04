@@ -62,15 +62,18 @@ public class CarrosController {
         try {
             return ResponseEntity.ok(this.carroBusiness.update(carro));
         } catch (Exception ex) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
-
 
     }
 
-    @DeleteMapping()
-    public void delete(@RequestBody Carro carro) {
-        this.carroBusiness.delete(carro);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity delete(@PathVariable("id") Integer id) {
+        Boolean statusDelete = this.carroBusiness.delete(id);
+
+        return statusDelete ?
+            ResponseEntity.ok().build() :
+            ResponseEntity.notFound().build();
     }
 
     private URI getUri(Integer id) {

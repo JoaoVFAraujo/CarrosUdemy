@@ -51,10 +51,12 @@ public class CarroBusiness {
         }
     }
 
-    public void delete(Carro carro) {
-        if (findById(carro.getId()).isPresent()) {
-            this.carroRepository.delete(carro);
+    public boolean delete(Integer id) {
+        if (findById(id).isPresent()) {
+            this.carroRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
 }
