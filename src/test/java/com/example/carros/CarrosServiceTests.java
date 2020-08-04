@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-class CarrosApplicationTests {
+class CarrosServiceTests {
 
 	@Autowired
 	private CarroBusiness carroBusiness;
@@ -67,7 +67,7 @@ class CarrosApplicationTests {
 		Assert.assertEquals("Tamanho de luxo diferente",
 				10,this.carroBusiness.findByTipo("luxo").size());
 		Assert.assertEquals("Encontrou tipo não existente",
-				0, this.carroBusiness.findByTipo("x").size());
+				0, this.carroBusiness.findByTipo("xxx").size());
 
 	}
 
