@@ -42,6 +42,33 @@ class CarrosServiceTests {
 	}
 
 	@Test
+	void testUpdate() {
+		Optional<CarroDTO> op = this.carroBusiness.findById(6);
+		Assert.assertTrue("Não encontrou o carro", op.isPresent());
+
+		CarroDTO carroResult = op.get();
+		Assert.assertEquals("Atributo Nome diferente", "Cadillac Eldorado", carroResult.getNome());
+		Assert.assertEquals("Atributo Tipo diferente", "classicos", carroResult.getTipo());
+
+		carroResult.setNome("Cadillac Edit");
+
+		carroResult = this.carroBusiness.update(Carro.init()
+				.withId(carroResult.getId())
+				.withNome(carroResult.getNome())
+				.withTipo(carroResult.getTipo()));
+
+		Assert.assertNotNull("Não existe o carro", carroResult);
+		Integer id = carroResult.getId();
+		Assert.assertNotNull("Não encontrou o Id", id);
+
+		op = this.carroBusiness.findById(id);
+		Assert.assertTrue("Não encontrou o carro", op.isPresent());
+
+		carroResult = op.get();
+		Assert.assertEquals("Atributo Nome diferente", "Cadillac Edit", carroResult.getNome());
+	}
+
+	@Test
 	void testFindAll() {
 		List<CarroDTO> carros = this.carroBusiness.findAll();
 
