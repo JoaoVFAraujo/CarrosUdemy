@@ -27,11 +27,7 @@ public class CarrosController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<CarroDTO> findById(@PathVariable Integer id) {
-        Optional<CarroDTO> carroOptional = this.carroBusiness.findById(id);
-
-        return carroOptional
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(this.carroBusiness.findById(id));
     }
 
     @GetMapping(path = "/tipo/{tipo}")
@@ -45,15 +41,9 @@ public class CarrosController {
 
     @PostMapping()
     public ResponseEntity<CarroDTO> save(@RequestBody Carro carro) {
+        URI location = this.getUri(this.carroBusiness.save(carro).getId());
 
-        try {
-            CarroDTO c = this.carroBusiness.save(carro);
-
-            URI location = this.getUri(c.getId());
-            return ResponseEntity.created(location).build();
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping()
@@ -69,11 +59,9 @@ public class CarrosController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity delete(@PathVariable("id") Integer id) {
-        Boolean statusDelete = this.carroBusiness.delete(id);
+        this.carroBusiness.delete(id);
 
-        return statusDelete ?
-            ResponseEntity.ok().build() :
-            ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 
     private URI getUri(Integer id) {

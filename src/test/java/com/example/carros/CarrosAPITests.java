@@ -60,31 +60,10 @@ class CarrosAPITests {
 	}
 
 	@Test
-	void testUpdate() {
-		ResponseEntity<CarroDTO> response = this.findById("/carros/6");
-		CarroDTO carroResult = response.getBody();
-
-		Assert.assertEquals("HttpStatus diferente", HttpStatus.OK, response.getStatusCode());
-		Assert.assertNotNull("Não encontrou o carro", carroResult);
-		Assert.assertEquals("Atributo Nome diferente", "Cadillac Eldorado", carroResult.getNome());
-		Assert.assertEquals("Atributoo Tipo diferente", "classicos", carroResult.getTipo());
-
-		Integer id = carroResult.getId();
-
-		carroResult.setNome("Cadillac Edit");
-
-//		FAZER UPDATE DEPOIS
-//		this.restTemplate.exchange("/carros/{id}", HttpMethod.PUT, Carro.init()
-//				.withId(carroResult.getId())
-//				.withNome(carroResult.getNome())
-//				.withTipo(carroResult.getTipo()), new ParameterizedTypeReference<List<CarroDTO>>() {
-//		});
-	}
-
-	@Test
 	void testFindAll() {
 		List<CarroDTO> carros = this.findAll("/carros").getBody();
 
+		Assert.assertNotNull("Carro está null", carros);
 		Assert.assertEquals("Tamanho diferente", 30, carros.size());
 	}
 

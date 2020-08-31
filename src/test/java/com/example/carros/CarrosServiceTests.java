@@ -1,6 +1,7 @@
 package com.example.carros;
 
 import com.example.carros.domain.dto.CarroDTO;
+import com.example.carros.domain.exception.ObjectNotFoundException;
 import com.example.carros.domain.model.Carro;
 import com.example.carros.domain.usecase.CarroBusiness;
 import org.junit.Assert;
@@ -27,10 +28,9 @@ class CarrosServiceTests {
 		Assert.assertNotNull("Não encontrou o Id", id);
 
 		// Buscar objeto
-		Optional<CarroDTO> op = this.carroBusiness.findById(id);
-		Assert.assertTrue("Não encontrou o carro", op.isPresent());
+		carroResult = this.carroBusiness.findById(id);
+		Assert.assertNotNull("Não existe o carro", carroResult);
 
-		carroResult = op.get();
 		Assert.assertEquals("Atributo Nome diferente","Ferrari", carroResult.getNome());
 		Assert.assertEquals("Atributo Tipo diferente","esportivos", carroResult.getTipo());
 
@@ -38,15 +38,17 @@ class CarrosServiceTests {
 		this.carroBusiness.delete(id);
 
 		// Verificar delete
-		Assert.assertFalse("Encontrou objeto deletado", this.carroBusiness.findById(id).isPresent());
+		try {
+			Assert.assertNull("Encontrou objeto deletado", this.carroBusiness.findById(id));
+		} catch (ObjectNotFoundException ex) {
+			// OK
+		}
 	}
 
 	@Test
 	void testUpdate() {
-		Optional<CarroDTO> op = this.carroBusiness.findById(6);
-		Assert.assertTrue("Não encontrou o carro", op.isPresent());
-
-		CarroDTO carroResult = op.get();
+		CarroDTO carroResult = this.carroBusiness.findById(6);
+		Assert.assertNotNull("Não encontrou o carro", carroResult);
 		Assert.assertEquals("Atributo Nome diferente", "Cadillac Eldorado", carroResult.getNome());
 		Assert.assertEquals("Atributo Tipo diferente", "classicos", carroResult.getTipo());
 
@@ -61,10 +63,8 @@ class CarrosServiceTests {
 		Integer id = carroResult.getId();
 		Assert.assertNotNull("Não encontrou o Id", id);
 
-		op = this.carroBusiness.findById(id);
-		Assert.assertTrue("Não encontrou o carro", op.isPresent());
-
-		carroResult = op.get();
+		carroResult = this.carroBusiness.findById(id);
+		Assert.assertNotNull("Não encontrou o carro", carroResult);
 		Assert.assertEquals("Atributo Nome diferente", "Cadillac Edit", carroResult.getNome());
 	}
 
@@ -77,10 +77,9 @@ class CarrosServiceTests {
 
 	@Test
 	void testFindById() {
-		Optional<CarroDTO> op = this.carroBusiness.findById(11);
-		CarroDTO carro = op.get();
+		CarroDTO carro = this.carroBusiness.findById(11);
 
-		Assert.assertTrue("Carro não encontrado", op.isPresent());
+		Assert.assertNotNull("Carro não encontrado", carro);
 		Assert.assertEquals("Atributo Nome diferente","Ferrari FF", carro.getNome());
 	}
 

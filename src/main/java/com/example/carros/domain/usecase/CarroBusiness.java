@@ -1,6 +1,7 @@
 package com.example.carros.domain.usecase;
 
 import com.example.carros.domain.dto.CarroDTO;
+import com.example.carros.domain.exception.ObjectNotFoundException;
 import com.example.carros.domain.model.Carro;
 import com.example.carros.domain.repository.CarroRepository;
 import org.modelmapper.internal.util.Assert;
@@ -21,8 +22,9 @@ public class CarroBusiness {
         return this.carroRepository.findAll().stream().map(CarroDTO::create).collect(Collectors.toList());
     }
 
-    public Optional<CarroDTO> findById(Integer id) {
-        return this.carroRepository.findById(id).map(CarroDTO::create);
+    public CarroDTO findById(Integer id) {
+        return this.carroRepository.findById(id).map(CarroDTO::create)
+                .orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado"));
     }
 
     public List<CarroDTO> findByTipo(String tipo) {
@@ -51,12 +53,8 @@ public class CarroBusiness {
         }
     }
 
-    public boolean delete(Integer id) {
-        if (findById(id).isPresent()) {
-            this.carroRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void delete(Integer id) {
+        this.carroRepository.deleteById(id);
     }
 
 }
